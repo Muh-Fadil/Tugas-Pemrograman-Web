@@ -1,0 +1,24 @@
+name: Compile SAMP
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Pawn
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-multilib
+          mkdir -p build
+          # Download compiler Linux agar kuat
+          wget https://github.com/pawn-lang/compiler/releases/download/v3.10.10/pawnc-3.10.10-linux.tar.gz
+          tar -zxvf pawnc-3.10.10-linux.tar.gz
+      - name: Compile
+        run: |
+          ./bin/pawncc gamemode.pwn -i:include -o:gamemode.amx -d0 -s32768
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: hasil-compile
+          path: gamemode.amx
+          
